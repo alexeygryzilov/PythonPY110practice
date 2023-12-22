@@ -173,4 +173,6 @@ DATABASE = {'1': {'name': 'Болгарский перец',
                    'html': 'chilli'
                    },
             }
-
+if __name__ == '__main__':
+    print(DATABASE.get('2'))
+    print(DATABASE.get('0'))
