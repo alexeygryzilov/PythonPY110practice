@@ -70,7 +70,11 @@ def products_page_view(request, page):
         if isinstance(page, str):
             for data in DATABASE.values():
                 if data['html'] == page:
-                    return render(request, "store/product.html", context={"product": data})
+                    list_data = filtering_category(DATABASE, data['category'])
+                    list_data_filtered = [item for item in list_data if item['name'] != data['name']]
+
+                    return render(request, "store/product.html", context={"product": data,
+                                                                          "list_products": list_data_filtered[:4]})
 
         elif isinstance(page, int):
             # Обрабатываем условие того, что пытаемся получить страницу товара по его id
@@ -183,7 +187,9 @@ def coupon_check_view(request, name_coupon):
     }
     if request.method == "GET":
         if coupon := DATA_COUPON.get(name_coupon):
-            return JsonResponse(coupon, json_dumps_params={'ensure_ascii': False})
+            data = {"discount": coupon["value"],
+                    "is_valid": coupon["is_valid"]}
+            return JsonResponse(data, json_dumps_params={'ensure_ascii': False})
         # TODO Проверьте, что купон есть в DATA_COUPON, если он есть, то верните JsonResponse в котором по ключу "discount"
         # получают значение скидки в процентах, а по ключу "is_valid" понимают действителен ли купон или нет (True, False)
         return HttpResponseNotFound("Неверный купон")

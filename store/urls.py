@@ -17,4 +17,5 @@ urlpatterns = [
     path('delivery/estimate/', delivery_estimate_view),
     path('cart/buy/<str:id_product>', cart_buy_now_view, name="buy_now"),
     path('cart/remove/<str:id_product>', cart_remove_view, name="remove_now"),
+
 ]
