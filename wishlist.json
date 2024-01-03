@@ -1,1 +1,1 @@
-{"admin": {"products": []}}
+{"user1": {"products": ["5", "7"]}, "admin": {"products": []}, "test": {"products": ["2", "3"]}}

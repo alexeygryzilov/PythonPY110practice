@@ -159,16 +159,16 @@ def add_user_to_cart(request, username: str) -> None:
 
 def add_user_to_wishlist(request, username: str) -> None:
     """
-    Добавляет пользователя в базу данных корзины, если его там не было.
+    Добавляет пользователя в базу данных избранного, если его там не было.
 
     :param username: Имя пользователя
     :return: None
     """
-    wishlist_users = view_in_wishlist(request)  # Чтение всей базы корзин
+    wishlist_users = view_in_wishlist(request)  # Чтение всей базы избранного
 
-    wishlist = wishlist_users.get(username)  # Получение корзины конкретного пользователя
+    wishlist = wishlist_users.get(username)  # Получение избранного конкретного пользователя
 
-    if not wishlist:  # Если пользователя до настоящего момента не было в корзине, то создаём его и записываем в базу
+    if not wishlist:  # Если пользователя до настоящего момента не было в избранном, то создаём его и записываем в базу
         with open('wishlist.json', mode='w', encoding='utf-8') as f:
             wishlist_users[username] = {'products': []}
             json.dump(wishlist_users, f)
@@ -184,7 +184,6 @@ def view_in_wishlist(request) -> dict:
         with open('wishlist.json', encoding='utf-8') as f:
             return json.load(f)
 
-#   cart = {'products': {}}  # Создаём пустую корзину
     user = get_user(request).username  # Получаем авторизированного пользователя
     wishlist = {user: {'products': []}}  # стало
     with open('wishlist.json', mode='x', encoding='utf-8') as f:  # Создаём файл и записываем туда пустую корзину
@@ -213,7 +212,7 @@ def add_to_wishlist(request, id_product: str) -> bool:
 #       cart['products'][id_product] += 1
 
     # TODO Не забываем записать обновленные данные cart в 'cart.json'
-    with open('wishlist.json', mode='w', encoding='utf-8') as f:  # Создаём файл и записываем туда пустую корзину
+    with open('wishlist.json', mode='w', encoding='utf-8') as f:  # Создаём файл и записываем туда wishlist
         json.dump(wishlist_users, f)
 
     return True
@@ -232,7 +231,7 @@ def remove_from_wishlist(request, id_product: str) -> bool:
     # TODO Если существует товар, то удаляем ключ 'id_product' у cart['products'].
     wishlist['products'].remove(id_product)
     # TODO Не забываем записать обновленные данные cart в 'cart.json'
-    with open('wishlist.json', mode='w', encoding='utf-8') as f:  # Создаём файл и записываем туда пустую корзину
+    with open('wishlist.json', mode='w', encoding='utf-8') as f:  # Создаём файл и записываем туда wishlist
         json.dump(wishlist_users, f)
 
     return True
@@ -248,6 +247,7 @@ if __name__ == "__main__":
 
     print(add_to_cart('1'))  # True
     print(view_in_cart())
+
     print(add_to_cart('0'))  # False
     print(add_to_cart('1'))  # True
     print(view_in_cart())
